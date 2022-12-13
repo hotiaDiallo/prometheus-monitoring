@@ -23,4 +23,17 @@ export KUBECONFIG=~/Downloads/prom-cluster-kubeconfig.yaml
 
 ![Image](/images/nodes.png "Clsuter setting on Linode")
 
+## Deploy our microservices application in LKE
 
+### [See more details about application](https://github.com/hotiaDiallo/deploy-shop-microservices)
+
+<br />
+
+![Image](/images/shop-archi.png)
+
+<br />
+
+```
+kubectl create namespace online-shop
+kubectl apply -f config-shop-ms.yaml -n online-shop
+```
