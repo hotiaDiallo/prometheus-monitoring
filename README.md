@@ -23,6 +23,8 @@ export KUBECONFIG=~/Downloads/prom-cluster-kubeconfig.yaml
 
 ![Image](/images/nodes.png "Clsuter setting on Linode")
 
+For more details on how to Deploy and Manage a Cluster on Linode Kubernetes Engine (LKE), [Here the docs](https://www.linode.com/docs/guides/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/).
+
 ## Deploy our microservices application in LKE
 
 ### [See more details about application](https://github.com/hotiaDiallo/deploy-shop-microservices)
