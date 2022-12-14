@@ -40,6 +40,8 @@ kubectl create namespace online-shop
 kubectl apply -f config-shop-ms.yaml -n online-shop
 ```
 
+![Image](/images/shop-ui.png)
+
 ## Monitoring with Prometheus
 
 To be able to use `Prometheus` to monitor our cluster, we need to deploy `Prometheus Operator Stack` 
@@ -194,3 +196,6 @@ rules:
 ```
     
 ![Image](/images/redis-rules.png)
+
+
+## configure Alertmanager
