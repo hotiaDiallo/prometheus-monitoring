@@ -137,3 +137,11 @@ After create the resource in the cluster, we can see now in the UI that our Aler
 
 ![Image](/images/cpu-usage.png)
 
+
+Now we have the Alert rule configured, Let's test to see if if the `Prometeus will fire an alert` (send the alert to the AlertManager)
+
+```
+kubectl run cpustress --image containerstack/cpustress -- --cpu 4 --timeout 60s --metrics-brief
+```
+
+![Image](/images/cpu-stress-fired.png)
