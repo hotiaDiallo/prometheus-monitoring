@@ -193,3 +193,4 @@ rules:
       description: "Redis instance has {{ $value }} connections\n LABELS = {{ $labels }}"
 ```
     
+![Image](/images/redis-rules.png)
