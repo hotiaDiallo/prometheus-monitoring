@@ -75,6 +75,8 @@ helm ls
 kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090 -n monitoring &
 ```
 
+![Image](/images/prom-UI.png)
+
 ### Access Grafana
 
 ```
@@ -89,4 +91,49 @@ In our case, it is going to be:
 - The cluster : k8s components 
 - The 3rd party applications (like Redis)
 - our own applications
+
+## Let's begin 
+we are going to configure our monitoring stack to notify us whenever something unexpected happens.  
+
+### use case 1 
+- CPU usage > 50%
+- Pod cannot start
+
+`Step 1 :` Create Alert rules 
+
+It consists of defining define alert conditions based on Prometheus expression language expressions and to send notifications about firing alerts to an external service
+
+`How do we create Alert rules?`
+
+Because Prometheus is running in our cluster as a Prometheus operator which extends the Kubernetes API, we can use `Custom resources`. So we create our resources and the operator takes it and tells Prometheus to relaod the alert rules. 
+
+Here is an example rule for `CPU usage > 50%`
+
+```
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: main-rules
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack 
+    release: monitoring
+spec:
+  groups:
+  - name: main.rules
+    rules:
+    - alert: HostHighCpuLoad
+      expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 50
+      for: 2m
+      labels:
+        severity: warning
+        namespace: monitoring
+      annotations:
+        description: "CPU load on host is over 50%\n Value = {{ $value }}\n Instance = {{ $labels.instance }}\n"
+        summary: "Host CPU load high"
+```
+
+After create the resource in the cluster, we can see now in the UI that our Alert rule has been add to the existing list. 
+
+![Image](/images/cpu-usage.png)
 
