@@ -18,11 +18,11 @@ spec:
   receivers:
   - name: 'email'
     emailConfigs:
-    - to: 'hotiadiallo95@gmail.com'
-      from: 'hotiadiallo95@gmail.com'
+    - to: 'hotia@gmail.com'
+      from: 'hotia@gmail.com'
       smarthost: 'smtp.gmail.com:587'
-      authUsername: 'hotiadiallo95@gmail.com'
-      authIdentity: 'hotiadiallo95@gmail.com'
+      authUsername: 'hotia@gmail.com'
+      authIdentity: 'hotia@gmail.com'
       authPassword:
        name: gmail-auth
        key: password
