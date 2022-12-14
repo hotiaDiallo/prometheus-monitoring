@@ -95,7 +95,7 @@ In our case, it is going to be:
 ## Let's begin 
 we are going to configure our monitoring stack to notify us whenever something unexpected happens.  
 
-### use case 1 
+### use case 1 : cluster monitoring
 - CPU usage > 50%
 - Pod cannot start
 
@@ -145,3 +145,51 @@ kubectl run cpustress --image containerstack/cpustress -- --cpu 4 --timeout 60s 
 ```
 
 ![Image](/images/cpu-stress-fired.png)
+
+### use case 2 : 3rd party application monitoring
+
+1- Deploy `Redis Exporter`
+
+his job is : 
+- get metrics data from the redis service, by ussing the given endpoint (redis://redis-cart:6379)
+- translate these metrics to Prometheus understandable metrics 
+- expose the translated metrics under `/metrics` endpoint. 
+
+For this project, we are going to use Helm to deploy the exporter application and all required configuration
+
+More details on :
+- https://github.com/oliver006/redis_exporter
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+
+helm install redis-exporter prometheus-community/prometheus-redis-exporter -f redis-values.yaml
+```
+Create Alert rules 
+
+In our case, we are going to monitor our Redis application to when : 
+- Redis is down 
+- there are too many connections 
+
+```
+rules:
+  - alert: RedisDown
+    expr: redis_up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Redis down (instance {{ $labels.instance }})
+      description: "Redis instance is down\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+  - alert: RedisTooManyConnections
+    expr: redis_connected_clients > 100
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Redis too many connections (instance {{ $labels.instance }})
+      description: "Redis instance has {{ $value }} connections\n LABELS = {{ $labels }}"
+```
+    
