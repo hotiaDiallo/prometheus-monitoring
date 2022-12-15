@@ -199,3 +199,41 @@ rules:
 
 
 ## configure Alertmanager
+
+When a condition is met, Prometheus fire an alert to the AlertManager which `dispatch notification` about that alert. 
+When we deploy Prometheus in the cluster, 2 seperates components are created : `Prometheus Server` and `Alertmanager`. Note that each of them has its own configuration. 
+
+By default, the Alertmanager instances will start with a minimal configuration which isn't really useful since it doesn't send any notification when receiving alerts.
+
+`How to add our configuration for alert notification`? --> By using Custom Resources `AlertmanagerConfig`
+
+```
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: main-rules-alert-config
+  namespace: monitoring
+spec:
+  route:
+    receiver: 'email'
+    repeatInterval: 30m
+    routes:
+    - matchers:
+      - name: alertname
+        value: HostHighCpuLoad
+    - matchers:
+      - name: alertname
+        value: KubernetesPodCrashLooping
+      repeatInterval: 10m
+  receivers:
+  - name: 'email'
+    emailConfigs:
+    - to: 'hotia@gmail.com'
+      from: 'hotia@gmail.com'
+      smarthost: 'smtp.gmail.com:587'
+      authUsername: 'hotia@gmail.com'
+      authIdentity: 'hotia@gmail.com'
+      authPassword:
+       name: gmail-auth
+       key: password
+````
