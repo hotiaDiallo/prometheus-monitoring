@@ -64,6 +64,10 @@ kubectl create namespace monitoring
 helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring
 helm ls
 ```
+Before running the `helm install` command, we can run the comman bellow to see the values in case we want to customize our chart : 
+```
+helm show values prometheus-community/kube-prometheus-stack > values.yaml
+```
 
 [Link to the chart: https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack]
 
